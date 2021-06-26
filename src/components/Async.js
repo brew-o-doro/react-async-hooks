@@ -38,13 +38,15 @@ export default function Async() {
 
     return (
         <>
+        <container>
         <h1>Async React Hooks</h1>
 
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} className="form">
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search for Gifs!"/>
             <button type="submit">Search</button>
         </form>
-
+        </container>
+        <br />
         {results.map(item => (<video autoPlay loop key={item} src ={item}/>))}
             
         </>
