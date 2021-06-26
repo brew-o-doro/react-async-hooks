@@ -1,32 +1,40 @@
 import React, { useState, useEffect } from 'react';
 
-async function fetchData(query) {
-    try {
-        let response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=nmPEyYNgfvZnjDk3dhLJ82P7QROqrMAq&q=${query}&limit=25&offset=0&rating=r&lang=en`);
-        const res = await response.json();
-        
-        res.data.map(data => {
-            return data.images.preview.mp4;
-        });   
-    } catch(err){}
+function useGiphy(query) {
+    const [results, setResults] = useState([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                let response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=nmPEyYNgfvZnjDk3dhLJ82P7QROqrMAq&q=${query}&limit=25&offset=0&rating=r&lang=en`);
+                const res = await response.json();
+                
+                setResults(
+                    res.data.map(data => {
+                        return data.images.preview.mp4;
+                    })
+                )
+            } catch(err){}
+        }
+        if (query !== '') {
+            fetchData();
+        }
+    }, [query]);
+
+    return results;
 }
 
 export default function Async() {
     const [search, setSearch] = useState('');
     const [query, setQuery] = useState('');
-    const [results, setResults] = useState([]);
-    
+    const results = useGiphy(query); 
+
     const onSubmit = (event) => {
         event.preventDefault();
         setQuery(search);
-        console.log(search);
     }
 
-    useEffect(() => {
-        if (query !== '') {
-            fetchData().then(setResults);
-        }
-    }, [query]);
+   
 
     return (
         <>
