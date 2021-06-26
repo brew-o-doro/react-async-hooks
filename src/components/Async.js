@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
+async function fetchData(query) {
+    try {
+        let response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=nmPEyYNgfvZnjDk3dhLJ82P7QROqrMAq&q=${query}&limit=25&offset=0&rating=r&lang=en`);
+        const res = await response.json();
+        
+        res.data.map(data => {
+            return data.images.preview.mp4;
+        });   
+    } catch(err){}
+}
 
 export default function Async() {
     const [search, setSearch] = useState('');
@@ -13,20 +23,8 @@ export default function Async() {
     }
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                let response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=nmPEyYNgfvZnjDk3dhLJ82P7QROqrMAq&q=${query}&limit=25&offset=0&rating=r&lang=en`);
-                const res = await response.json();
-                
-                setResults(
-                    res.data.map(data => {
-                        return data.images.preview.mp4;
-                    })
-                )
-            } catch(err){}
-        }
         if (query !== '') {
-            fetchData();
+            fetchData().then(setResults);
         }
     }, [query]);
 
